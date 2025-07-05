@@ -42,7 +42,7 @@ function App() {
 
         scrollToBottom();
 
-        fetch("http://192.168.2.110:3000/send-message", {
+        fetch("http://localhost:3000/send-message", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
