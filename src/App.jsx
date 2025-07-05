@@ -1,9 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import socketClient from "./utils/socketClient";
 
 function App() {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
+    const chatRef = useRef();
+
+    useEffect(() => {
+        // Scroll to bottom
+        chatRef.current.scrollTo(0, chatRef.current.scrollHeight);
+    }, [messages.length]);
 
     useEffect(() => {
         const channel = socketClient.subscribe("k12");
@@ -20,7 +26,7 @@ function App() {
     const handleChat = (e) => {
         e.preventDefault();
 
-        fetch("http://localhost:3000/send-message", {
+        fetch("http://192.168.2.110:3000/send-message", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -37,7 +43,7 @@ function App() {
 
     return (
         <div className="chat-window">
-            <ul className="chat-messages">
+            <ul className="chat-messages" ref={chatRef}>
                 {messages.map((item, index) => (
                     <li key={index}>{item.message}</li>
                 ))}
