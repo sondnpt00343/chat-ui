@@ -1,24 +1,51 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import socketClient from "./utils/socketClient";
 
 function App() {
+    const [message, setMessage] = useState("");
+    const [messages, setMessages] = useState([]);
+
     useEffect(() => {
         const channel = socketClient.subscribe("k12");
+
+        channel.bind("new-message", function (data) {
+            setMessages((prev) => [...prev, data]);
+        });
+
         return () => {
             channel.unsubscribe();
         };
     }, []);
 
+    const handleChat = (e) => {
+        e.preventDefault();
+
+        fetch("http://localhost:3000/send-message", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                message,
+            }),
+        })
+            .then((res) => res.json())
+            .then(() => {
+                setMessage("");
+            });
+    };
+
     return (
         <div className="chat-window">
             <ul className="chat-messages">
-                <li className="me">Hello anh em!</li>
-                <li>Hello lại 1!</li>
-                <li>Hello lại 2!</li>
-                <li>Hello lại 3!</li>
+                {messages.map((item, index) => (
+                    <li key={index}>{item.message}</li>
+                ))}
             </ul>
-            <form className="chat-form">
+            <form className="chat-form" onSubmit={handleChat}>
                 <textarea
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
                     className="chat-input"
                     placeholder="Enter message..."
                 ></textarea>
