@@ -9,3 +9,53 @@ body {
         Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
         sans-serif;
 }
+
+.chat-window {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    padding: 20px;
+    background: #fff;
+}
+.chat-messages {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+}
+
+.chat-messages li {
+    max-width: 60%;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: #ebebeb;
+}
+
+.chat-messages li.me {
+    align-self: flex-end;
+    background: #03a8e3;
+}
+
+.chat-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+}
+.chat-input {
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.chat-submit {
+    height: 100%;
+    padding: 0 20px;
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid gray;
+    cursor: pointer;
+}
