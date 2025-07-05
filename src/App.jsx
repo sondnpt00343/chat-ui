@@ -5,11 +5,25 @@ function App() {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const chatRef = useRef();
+    const shouldToBottom = useRef(true);
+
+    const scrollToBottom = () => {
+        chatRef.current.scrollTo(0, chatRef.current.scrollHeight);
+    };
 
     useEffect(() => {
-        // Scroll to bottom
-        chatRef.current.scrollTo(0, chatRef.current.scrollHeight);
+        if (shouldToBottom.current) scrollToBottom();
     }, [messages.length]);
+
+    useEffect(() => {
+        chatRef.current.onscroll = () => {
+            const threshold = 30;
+            const diff =
+                chatRef.current.scrollHeight -
+                (chatRef.current.scrollTop + chatRef.current.clientHeight);
+            shouldToBottom.current = diff <= threshold;
+        };
+    }, []);
 
     useEffect(() => {
         const channel = socketClient.subscribe("k12");
@@ -25,6 +39,8 @@ function App() {
 
     const handleChat = (e) => {
         e.preventDefault();
+
+        scrollToBottom();
 
         fetch("http://192.168.2.110:3000/send-message", {
             method: "POST",
